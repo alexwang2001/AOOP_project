@@ -252,6 +252,7 @@ void TicketSalesSystem::on_createAccountButton_clicked()
         }
         ui->lineEdit_password->clear();
         set_login_page();
+        int i = 0;
+        i = 1;
     }
 }
-

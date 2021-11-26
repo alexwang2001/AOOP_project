@@ -8,8 +8,8 @@ bool Database::initializeDB(QString username, QString password, USI port){
 
     // set database
     database = QSqlDatabase::addDatabase("QMYSQL");
-    database.setHostName("localhost");
     database.setDatabaseName("trainsystem");
+    database.setHostName("127.0.0.1");
     database.setUserName(username);
     database.setPassword(password);
     database.setPort(port);

@@ -176,8 +176,18 @@
           <height>191</height>
          </rect>
         </property>
+        <property name="minimumDate">
+         <date>
+          <year>2021</year>
+          <month>1</month>
+          <day>1</day>
+         </date>
+        </property>
         <property name="gridVisible">
          <bool>false</bool>
+        </property>
+        <property name="selectionMode">
+         <enum>QCalendarWidget::SingleSelection</enum>
         </property>
         <property name="horizontalHeaderFormat">
          <enum>QCalendarWidget::ShortDayNames</enum>
@@ -224,10 +234,10 @@
          <bool>false</bool>
         </property>
         <attribute name="horizontalHeaderVisible">
-         <bool>true</bool>
+         <bool>false</bool>
         </attribute>
         <attribute name="verticalHeaderVisible">
-         <bool>true</bool>
+         <bool>false</bool>
         </attribute>
        </widget>
       </widget>

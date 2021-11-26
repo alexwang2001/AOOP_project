@@ -11,6 +11,7 @@ CONFIG += c++11
 SOURCES += \
     database.cpp \
     main.cpp \
+    mygraphicview.cpp \
     ticketsalessystem.cpp \
     ticket.cpp \
     networkserver.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     database.h \
+    mygraphicview.h \
     ticketsalessystem.h \
     ticket.h \
     networkserver.h \

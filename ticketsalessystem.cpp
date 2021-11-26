@@ -132,7 +132,7 @@ void TicketSalesSystem::on_pushButton_clicked()
         ui->tableWidget->setRowCount(++i);
         TrainGraphicsView *item = new TrainGraphicsView(new QGraphicsView);
         ui->tableWidget->setCellWidget(i-1, 0, item);
-        ui->tableWidget->setColumnWidth(i-1, 400);
+        ui->tableWidget->setColumnWidth(i-1, 380);
         ui->tableWidget->setRowHeight(i-1, 120);
         ui->tableWidget->verticalScrollMode();
     }

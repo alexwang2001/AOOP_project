@@ -12,7 +12,10 @@
 #include <QSqlError>
 #include <QVector>
 #include <QMessageBox>
+#include <QTableWidgetItem>
+#include <QGraphicsView>
 #include "networkserver.h"
+#include "mygraphicview.h"
 
 
 QT_BEGIN_NAMESPACE

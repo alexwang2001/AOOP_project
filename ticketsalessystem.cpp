@@ -39,6 +39,9 @@ TicketSalesSystem::TicketSalesSystem(QWidget *parent)
     connect(ui->actionstack0,SIGNAL(triggered()),this,SLOT(stack0()));
     connect(ui->actionstack1,SIGNAL(triggered()),this,SLOT(stack1()));
 
+    // train time table
+    ui->tableWidget->setColumnCount(1);
+    ui->tableWidget->setRowCount(0);
 }
 
 TicketSalesSystem::~TicketSalesSystem()
@@ -118,20 +121,26 @@ void TicketSalesSystem::on_pushButton_clicked()
     else{
         server->query->exec("select * from traintable where Departure = '" + dep + "' and Terminal = '" + arr + "' and ArrivalTime >= " + stnum + " and ArrivalTime <= " + ednum + " and " + datestr + " = 1;");
     }
-    server->query->next();
-    ui->label_12->setText("Train " + server->query->value(0).toString());
-    ui->label->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    ui->label_10->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
+    int i=0;
+    while(server->query->next()){
+        ui->tableWidget->setRowCount(++i);
+        ui->tableWidget->cellWidget(i,0);
+    }
 
-    server->query->next();
-    ui->label_13->setText("Train " + server->query->value(0).toString());
-    ui->label_15->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    ui->label_16->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
+    //server->query->next();
+    //ui->label_12->setText("Train " + server->query->value(0).toString());
+    //ui->label->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
+    //ui->label_10->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
 
-    server->query->next();
-    ui->label_17->setText("Train " + server->query->value(0).toString());
-    ui->label_19->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    ui->label_20->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
+    //server->query->next();
+    //ui->label_13->setText("Train " + server->query->value(0).toString());
+    //ui->label_15->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
+    //ui->label_16->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
+
+    //server->query->next();
+    //ui->label_17->setText("Train " + server->query->value(0).toString());
+    //ui->label_19->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
+    //ui->label_20->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
 
 }
 

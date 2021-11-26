@@ -25,7 +25,7 @@ TicketSalesSystem::TicketSalesSystem(QWidget *parent)
         ui->statusbar->showMessage("connection fail すみません!!");
 
     // set initial page
-    switchPage(1);
+    switchPage(0);
     set_login_page();
 
     // set station combobox

@@ -26,9 +26,13 @@ CREATE TABLE IF NOT EXISTS traintable (
 );
 INSERT INTO traintable VALUES (1001,'Alpha','Beta',1120,1240,'north',1,1,1,1,1,0,0);
 INSERT INTO traintable VALUES (1002,'Alpha','Beta',1130,1250,'north',1,1,1,1,1,0,0);
-INSERT INTO traintable VALUES (1003,'Alpha','Beta',1140,1300,'north',0,0,0,0,0,1,1);
-INSERT INTO traintable VALUES (1004,'Beta','Alpha',1430,1600,'north',0,0,0,0,0,1,1);
-INSERT INTO traintable VALUES (1005,'Beta','Alpha',1140,1300,'north',0,0,0,0,0,1,1);
+INSERT INTO traintable VALUES (1003,'Alpha','Beta',1140,1300,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1004,'Beta','Alpha',1430,1600,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1005,'Beta','Alpha',1140,1300,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1006,'Alpha','Beta',1140,1300,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1007,'Alpha','Beta',1140,1300,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1008,'Alpha','Beta',1140,1300,'north',1,1,1,1,1,1,1);
+INSERT INTO traintable VALUES (1009,'Alpha','Beta',1140,1300,'north',1,1,1,1,1,1,1);
 INSERT INTO stationtable VALUES ('Alpha',0);
 INSERT INTO stationtable VALUES ('Beta',1);
 INSERT INTO stationtable VALUES ('Gamma',2);
@@ -37,3 +41,4 @@ INSERT INTO account VALUES ('alexwang','123456','Client');
 SELECT * FROM stationtable;
 SELECT * FROM traintable;
 SELECT * FROM account;
+

@@ -11,19 +11,19 @@ CONFIG += c++11
 SOURCES += \
     database.cpp \
     main.cpp \
-    mygraphicview.cpp \
     ticketsalessystem.cpp \
     ticket.cpp \
     networkserver.cpp \
-    people.cpp
+    people.cpp \
+    traingraphicview.cpp
 
 HEADERS += \
     database.h \
-    mygraphicview.h \
     ticketsalessystem.h \
     ticket.h \
     networkserver.h \
-    people.h
+    people.h \
+    traingraphicview.h
 
 FORMS += \
     ticketsalessystem.ui

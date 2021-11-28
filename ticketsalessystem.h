@@ -15,7 +15,7 @@
 #include <QTableWidgetItem>
 #include <QGraphicsView>
 #include "networkserver.h"
-#include "mygraphicview.h"
+#include "traingraphicview.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -41,6 +41,7 @@ private:
     QDateTime *datetime;
     QTimer *timer;
     NetworkServer *server;
+    QVector<TrainGraphicsView*> traindisp;
 
 
 private slots:

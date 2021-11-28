@@ -127,10 +127,15 @@ void TicketSalesSystem::on_pushButton_clicked()
     else{
         server->query->exec("select * from traintable where Departure = '" + dep + "' and Terminal = '" + arr + "' and ArrivalTime >= " + stnum + " and ArrivalTime <= " + ednum + " and " + datestr + " = 1;");
     }
+    while(!traindisp.empty()){
+        delete traindisp.front();
+        traindisp.pop_front();
+    }
     int i=0;
     while(server->query->next()){
-        ui->tableWidget->setRowCount(++i);
         TrainGraphicsView *item = new TrainGraphicsView(new QGraphicsView);
+        traindisp.append(item);
+        ui->tableWidget->setRowCount(++i);
         ui->tableWidget->setCellWidget(i-1, 0, item);
         ui->tableWidget->setColumnWidth(i-1, 380);
         ui->tableWidget->setRowHeight(i-1, 120);
@@ -140,16 +145,6 @@ void TicketSalesSystem::on_pushButton_clicked()
     //ui->label_12->setText("Train " + server->query->value(0).toString());
     //ui->label->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
     //ui->label_10->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
-
-    //server->query->next();
-    //ui->label_13->setText("Train " + server->query->value(0).toString());
-    //ui->label_15->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    //ui->label_16->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
-
-    //server->query->next();
-    //ui->label_17->setText("Train " + server->query->value(0).toString());
-    //ui->label_19->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    //ui->label_20->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
 
 }
 

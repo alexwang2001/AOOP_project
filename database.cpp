@@ -21,6 +21,9 @@ bool Database::initializeDB(QString username, QString password, USI port){
     query = new QSqlQuery;
     *query = QSqlQuery(database);
 
+    if(query == NULL)
+        return false;
+
     return true;
 }
 

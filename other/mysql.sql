@@ -42,3 +42,24 @@ SELECT * FROM stationtable;
 SELECT * FROM traintable;
 SELECT * FROM account;
 
+CREATE DATABASE IF NOT EXISTS request;
+USE request;
+CREATE TABLE IF NOT EXISTS requestqueue (
+	url VARCHAR(100)
+);
+
+CREATE DATABASE IF NOT EXISTS response;
+USE response;
+
+CREATE USER 'initial'@'%' IDENTIFIED BY 'tsaimotheriloveyou';
+GRANT INSERT ON request.* TO 'initial'@'%';
+flush privileges;
+USE response;
+CREATE TABLE IF NOT EXISTS new (
+	IP VARCHAR(15),
+    response INT(4)
+);
+GRANT SELECT ON response.new TO 'initial'@'%';
+flush privileges;
+
+SHOW GLOBAL VARIABLES LIKE 'PORT';

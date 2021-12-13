@@ -1,4 +1,4 @@
-#include "mygraphicview.h"
+#include "traingraphicview.h"
 
 TrainGraphicsView::TrainGraphicsView(QWidget *parent): QGraphicsView(parent){
     scene = new QGraphicsScene(0,0,300,100);

@@ -1,5 +1,5 @@
-#ifndef MYGRAPHICVIEW_H
-#define MYGRAPHICVIEW_H
+#ifndef TRAINGRAPHICVIEW_H
+#define TRAINGRAPHICVIEW_H
 
 #include <QGraphicsView>
 #include <QObject>
@@ -18,4 +18,4 @@ private:
     QGraphicsTextItem *number;
 };
 
-#endif // MYGRAPHICVIEW_H
+#endif // TRAINGRAPHICVIEW_H

@@ -1,28 +1,27 @@
 #ifndef NETWORKSERVER_H
 #define NETWORKSERVER_H
 
-#include <vector>
-#include <string>
+#include <QString>
+#include <QVector>
+#include <QMap>
 #include <QSqlDatabase>
 #include <QSqlResult>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QTcpSocket>
+#include <QTcpServer>
 #include <QDebug>
-#include "ticket.h"
-#include "people.h"
+#include "../ticket.h"
+#include "../people.h"
+#include "../databasesystem.h"
 
 using namespace std;
 
 class NetworkServer {
-private:
-    vector<Client> clientlist;
-    vector<Staff> stafflist;
-    vector<Manager> managerlist;
-    string connectToIP;
-    unsigned short connectToPort;
+
+    Q_OBJECT
 
 public:
-
     NetworkServer();
     ~NetworkServer();
 
@@ -31,15 +30,30 @@ public:
     // modify tickets
     // cancel tickets
 
-
-    enum newAccountError{NoError, NameExist};
-    int newManager(Manager manager);
+    // new account
+    enum newAccountError{NoError, NameExist, NoAuthority};
+    int newManager(Manager manager, QString key);
+    int newStaff(Staff staff, QString key);
     int newClient(Client client);
-    int newStaff(Staff staff);
     bool findClinet(QString account, Client&);
 
-    QSqlDatabase database;
-    QSqlQuery *query;
+    DatabaseSystem *databasesystem;
+
+private:
+    QVector<Client> clientlist;
+    QVector<Staff> stafflist;
+    QVector<Manager> managerlist;
+
+    QString connectToIP;
+    unsigned short connectToPort;
+
+    QTcpServer *server;
+    QMap<quint32,QTcpSocket*> sockets;
+
+public slots:
+    void slot_newConnection();
+    void slot_readyRead();
+    void slot_disconnect();
 
 };
 

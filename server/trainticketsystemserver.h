@@ -41,7 +41,7 @@ private:
 
     // sockets
     QMap<USI,QTcpSocket*> sockets; // <port, socket>
-    const USI PORTMAX = 10;
+    const USI PORTMAX = 1;
 
     QMap<USI,USI> usertype; // <port,Usertype> check order.h
 
@@ -55,6 +55,8 @@ private:
 
     // send station table
     void sendSationTable(QTcpSocket* socket);
+
+    void searchTrain(bool depOrarr, QString starttime, QString endtime);
 
 
 public slots:

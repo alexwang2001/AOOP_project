@@ -123,6 +123,7 @@ void TrainTicketSystemServer::slot_readyRead(){
 void TrainTicketSystemServer::slot_disconnect(){
     QTcpSocket *socket = dynamic_cast<QTcpSocket*>(sender());
     sockets.remove(sockets.key(socket));
+    usertype.remove(sockets.key(socket));
     qDebug() << socket->peerAddress().toString() << " disconnect";
     socket->deleteLater();
 }
@@ -179,7 +180,7 @@ int TrainTicketSystemServer::login(const QString& account, const QString& passwo
 }
 
 // ==========================================================
-// =============== Send Station Table =======================
+// =============== Train Searching =======================
 
 void TrainTicketSystemServer::sendSationTable(QTcpSocket* socket){
     request(QString::number(ServerOrder::SendStationTable));
@@ -189,6 +190,24 @@ void TrainTicketSystemServer::sendSationTable(QTcpSocket* socket){
     while(query->next()){
         request(query->value(0).toString());
         qDebug() << query->value(0).toString();
+    }
+    request(QString::number(ServerOrder::DataTransferEnd));
+    send_request(socket);
+}
+
+void TrainTicketSystemServer::searchTrain(bool depOrarr, const QString &depart, const QString &arrive, const QString &starttime, const QString &endtime, const QString &dayoftheweek, QTcpSocket* socket){
+    QSqlQuery* query = dbsystem.query();
+    if(depOrarr){
+        query->exec("select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and DepartureTime >= " + starttime + " and DepartureTime <= " + endtime + " and " + dayoftheweek + " = 1;");
+    }
+    else{
+        query->exec("select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and ArrivalTime >= " + starttime + " and ArrivalTime <= " + endtime + " and " + dayoftheweek + " = 1;");
+    }
+
+    while(query->next()){
+        for(int i=0; i<=4; i++){
+            request(query->value(i).toString());
+        }
     }
     request(QString::number(ServerOrder::DataTransferEnd));
     send_request(socket);

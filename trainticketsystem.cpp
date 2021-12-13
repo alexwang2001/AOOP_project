@@ -9,6 +9,10 @@ void TrainTicketSystem::request(const QString &re){
     request_string += re + "\n";
 }
 
+void TrainTicketSystem::request(const int &renum){
+    request_string += QString::number(renum) + "\n";
+}
+
 void TrainTicketSystem::send_request(QTcpSocket *socket){
     QByteArray writebyte = (request_string).toUtf8();
     socket->write(writebyte);

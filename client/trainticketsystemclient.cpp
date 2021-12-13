@@ -100,10 +100,11 @@ void TrainTicketSystemClient::on_pushButton_clicked()
 {
     QString dep = ui->comboBox->currentText();
     QString arr = ui->comboBox_2->currentText();
-    QTime starttime = ui->timeEdit->time();
-    QTime endtime = ui->timeEdit_2->time();
-    QString stnum = QString::number(starttime.hour()*100 + starttime.minute());
-    QString ednum = QString::number(endtime.hour()*100 + endtime.minute());
+
+    int start = (ui->comboBox_3->currentIndex()*12)*100+(ui->comboBox_4->currentIndex()+1)*100+ui->comboBox_5->currentIndex()*10;
+    int end = (ui->comboBox_6->currentIndex()*12)*100+(ui->comboBox_7->currentIndex()+1)*100+ui->comboBox_8->currentIndex()*10;
+    QString stnum = QString::number(start);
+    QString ednum = QString::number(end);
     QDate date = ui->dateEdit->date();
     QString datestr;
     switch (date.dayOfWeek()) {
@@ -130,18 +131,15 @@ void TrainTicketSystemClient::on_pushButton_clicked()
             break;
     }
     qDebug() << "Inqury: " << dep << arr << stnum << " " << ednum;
-    if(ui->radioButton->isChecked()){
-        //server->query->exec("select * from traintable where Departure = '" + dep + "' and Terminal = '" + arr + "' and DepartureTime >= " + stnum + " and DepartureTime <= " + ednum + " and " + datestr + " = 1;");
-    }
-    else{
-        //server->query->exec("select * from traintable where Departure = '" + dep + "' and Terminal = '" + arr + "' and ArrivalTime >= " + stnum + " and ArrivalTime <= " + ednum + " and " + datestr + " = 1;");
-    }
+
     while(!traindisp.empty()){
         delete traindisp.front();
         traindisp.pop_front();
     }
-    int i=0;
-    /*while(server->query->next()){
+
+
+    /*int i=0;
+    while(server->query->next()){
         TrainGraphicsView *item = new TrainGraphicsView(new QGraphicsView);
         traindisp.append(item);
         ui->tableWidget->setRowCount(++i);
@@ -150,10 +148,7 @@ void TrainTicketSystemClient::on_pushButton_clicked()
         ui->tableWidget->setRowHeight(i-1, 120);
         ui->tableWidget->verticalScrollMode();
     }*/
-    //server->query->next();
-    //ui->label_12->setText("Train " + server->query->value(0).toString());
-    //ui->label->setText(server->query->value(1).toString() + " --> " + server->query->value(2).toString());
-    //ui->label_10->setText(server->query->value(3).toString() + " --> " + server->query->value(4).toString());
+
 
 }
 

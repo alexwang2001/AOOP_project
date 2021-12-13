@@ -1,4 +1,4 @@
-QT       += core gui sql
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -9,24 +9,22 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    database.cpp \
+    ../people.cpp \
+    ../ticket.cpp \
+    ../traingraphicview.cpp \
+    ../trainticketsystem.cpp \
     main.cpp \
-    ticketsalessystem.cpp \
-    ticket.cpp \
-    networkserver.cpp \
-    people.cpp \
-    traingraphicview.cpp
+    trainticketsystemclient.cpp
 
 HEADERS += \
-    database.h \
-    ticketsalessystem.h \
-    ticket.h \
-    networkserver.h \
-    people.h \
-    traingraphicview.h
+    ../people.h \
+    ../ticket.h \
+    ../traingraphicview.h \
+    ../trainticketsystem.h \
+    trainticketsystemclient.h
 
 FORMS += \
-    ticketsalessystem.ui
+    trainticketsystemclient.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -16,6 +16,7 @@ SOURCES += \
     main.cpp \
     trainticketsystemserver.cpp
 
+
 HEADERS += \
     ../databasesystem.h \
     ../people.h \

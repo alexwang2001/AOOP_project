@@ -19,6 +19,7 @@ public:
 
     // request & response function
     void request(const QString& re);
+    void request(const int& renum);
     void send_request(QTcpSocket* socket);
     QString response(const QByteArray& request);
 
@@ -29,12 +30,14 @@ public:
         ConnectionReject,
         LoginStatus,
         SendStationTable,
+        SendTrainInquiry,
         DataTransferEnd
     };
 
     enum ClientOrder{
         Login,
-        AskStationTable
+        AskStationTable,
+        TrainInquiry
     };
 
     enum Usertype{

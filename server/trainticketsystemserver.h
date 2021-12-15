@@ -33,6 +33,9 @@ public:
 private:
     Ui::TrainTicketSystemServer *ui;
 
+    // initial system
+    bool connectDB(QString hostname, QString username, QString password, USI port, USI max);
+
     // database
     DatabaseSystem dbsystem;
 
@@ -41,7 +44,8 @@ private:
 
     // sockets
     QMap<USI,QTcpSocket*> sockets; // <port, socket>
-    const USI PORTMAX = 1;
+    USI PORTMAX = 2;
+
 
     QMap<USI,USI> usertype; // <port,Usertype> check order.h
 
@@ -55,14 +59,20 @@ private:
 
     // send station table
     void sendSationTable(QTcpSocket* socket);
+    void searchTrain(bool depOrarr, const QString& depart, const QString& arrive, const QString& starttime, const QString& endtime, const QString& dayoftheweek, QTcpSocket* socket);
 
-    void searchTrain(bool depOrarr, QString starttime, QString endtime);
+    // set pages
+    void switchPage(int idx);
 
 
 public slots:
     void slot_newConnection();
     void slot_readyRead();
     void slot_disconnect();
+
+
+private slots:
+    void on_pushButton_clicked();
 
 };
 #endif // TRAINTICKETSYSTEMSERVER_H

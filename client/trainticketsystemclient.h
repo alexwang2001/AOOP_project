@@ -61,5 +61,10 @@ private slots:
     // network
     void slot_readyRead();
     void slot_disconnect();
+
+    // trian disp
+    void slot_booking();
+    void on_pushButton_2_clicked();
+    void on_pushButton_3_clicked();
 };
 #endif // TRAINTICKETSYSTEMCLIENT_H

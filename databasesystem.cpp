@@ -12,12 +12,13 @@ bool DatabaseSystem::initializeDB(QString hostname, QString username, QString pa
     data_base.setHostName(hostname);
     data_base.setUserName(username);
     data_base.setPassword(password);
+    data_base.setPort(port);
 
-    if(port != 0)
-        data_base.setPort(port);
-
-    if(!data_base.open())
+    if(!data_base.open()){
+        data_base.removeDatabase("QMYSQL");
         return false;
+    }
+
     qDebug() << "Database Error: " << data_base.lastError();
     // set query
     dquery = new QSqlQuery;

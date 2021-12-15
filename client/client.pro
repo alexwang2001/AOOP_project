@@ -13,6 +13,7 @@ SOURCES += \
     ../ticket.cpp \
     ../traingraphicview.cpp \
     ../trainticketsystem.cpp \
+    arrow.cpp \
     main.cpp \
     trainticketsystemclient.cpp
 
@@ -21,6 +22,7 @@ HEADERS += \
     ../ticket.h \
     ../traingraphicview.h \
     ../trainticketsystem.h \
+    arrow.h \
     trainticketsystemclient.h
 
 FORMS += \

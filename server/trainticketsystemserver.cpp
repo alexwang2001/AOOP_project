@@ -7,17 +7,6 @@ TrainTicketSystemServer::TrainTicketSystemServer(QWidget *parent)
 {
     ui->setupUi(this);
 
-    // set database
-    if(!dbsystem.initializeDB()){
-        dbsystem.initializeDB("140.113.138.72", "client", "tsaimotheriloveyou", 3306);
-    };
-
-    // check database is open
-    if(dbsystem.database().isOpen())
-        ui->statusbar->showMessage("conection success 안녕하세요!!", 10000);
-    else
-        ui->statusbar->showMessage("connection fail すみません!!", 10000);
-
     // set Tcp server
     server = new QTcpServer;
     server->listen(QHostAddress::Any, 13579);
@@ -30,19 +19,57 @@ TrainTicketSystemServer::TrainTicketSystemServer(QWidget *parent)
 
     // table
     model = new QStandardItemModel(0,3,ui->tableView);
-    model->setHorizontalHeaderItem(0,new QStandardItem(QString("Port Number")));
-    model->setHorizontalHeaderItem(1,new QStandardItem(QString("User")));
+
+    model->setHorizontalHeaderItem(0,new QStandardItem(QString("Client Number")));
+    model->setHorizontalHeaderItem(1,new QStandardItem(QString("User Identity")));
     model->setHorizontalHeaderItem(2,new QStandardItem(QString("Request")));
 
     ui->tableView->setModel(model);
     ui->tableView->setColumnWidth(0,100);
     ui->tableView->setColumnWidth(1,100);
-    ui->tableView->setColumnWidth(2,500);
+
+    ui->tableView->setColumnWidth(2,578);
+
+    // connect DB page
+    ui->stackedWidget->setCurrentIndex(1);
+    ui->lineEdit->setText("140.113.138.72");
+    ui->lineEdit_2->setText("client");
+    ui->lineEdit_3->setText("tsaimotheriloveyou");
+    ui->lineEdit_4->setText("3306");
+    ui->lineEdit_5->setText("2");
+
 }
 
 TrainTicketSystemServer::~TrainTicketSystemServer()
 {
     delete ui;
+}
+
+
+// ==========================================================
+// ==================== Database ============================
+
+bool TrainTicketSystemServer::connectDB(QString hostname, QString username, QString password, USI port, USI max){
+    // set max connection
+    PORTMAX = max;
+
+    // set database
+    dbsystem.initializeDB(hostname, username, password, port);
+
+    // check database is open
+    if(dbsystem.database().isOpen()){
+        ui->statusbar->showMessage("conection success 안녕하세요!!", 10000);
+        switchPage(0);
+        return true;
+    }
+    else
+        ui->statusbar->showMessage("connection fail すみません!!", 10000);
+    return false;
+}
+
+void TrainTicketSystemServer::on_pushButton_clicked()
+{
+    connectDB(ui->lineEdit->text(),ui->lineEdit_2->text(),ui->lineEdit_3->text(),ui->lineEdit_4->text().toUShort(),ui->lineEdit_5->text().toUShort());
 }
 
 int TrainTicketSystemServer::tableRowCnt = 0;
@@ -116,20 +143,28 @@ void TrainTicketSystemServer::slot_readyRead(){
         else if(order == ClientOrder::AskStationTable){
             sendSationTable(socket);
         }
+        else if(order == ClientOrder::TrainInquiry){
+            bool depOrarr = QString::fromUtf8(socket->readLine()).toInt();
+            searchTrain(depOrarr,response(socket->readLine()),response(socket->readLine()),response(socket->readLine()),response(socket->readLine()),response(socket->readLine()),socket);
+        }
     }
 
 }
 
 void TrainTicketSystemServer::slot_disconnect(){
     QTcpSocket *socket = dynamic_cast<QTcpSocket*>(sender());
+    writeinTable(sockets.key(socket),*usertype.constFind(sockets.key(socket)), "Disconnect");
+
     sockets.remove(sockets.key(socket));
     usertype.remove(sockets.key(socket));
+
     qDebug() << socket->peerAddress().toString() << " disconnect";
     socket->deleteLater();
 }
 
 // ==========================================================
-// ====================== Table =============================
+// ================= Train display Table ====================
+
 
 void TrainTicketSystemServer::writeinTable(USI port, USI usertype, QString content){
 
@@ -180,10 +215,12 @@ int TrainTicketSystemServer::login(const QString& account, const QString& passwo
 }
 
 // ==========================================================
-// =============== Train Searching =======================
+// ============= Station & Train Searching ==================
 
 void TrainTicketSystemServer::sendSationTable(QTcpSocket* socket){
-    request(QString::number(ServerOrder::SendStationTable));
+    writeinTable(port, *usertype.find(port), "Ask for station table");
+
+    request(ServerOrder::SendStationTable);
 
     QSqlQuery* query = dbsystem.query();
     query->exec("select * from stationtable;");
@@ -191,17 +228,25 @@ void TrainTicketSystemServer::sendSationTable(QTcpSocket* socket){
         request(query->value(0).toString());
         qDebug() << query->value(0).toString();
     }
-    request(QString::number(ServerOrder::DataTransferEnd));
+    request(ServerOrder::DataTransferEnd);
     send_request(socket);
 }
 
 void TrainTicketSystemServer::searchTrain(bool depOrarr, const QString &depart, const QString &arrive, const QString &starttime, const QString &endtime, const QString &dayoftheweek, QTcpSocket* socket){
+    writeinTable(port, *usertype.find(port), "Train Inquiry");
+
+    request(ServerOrder::SendTrainInquiry);
+
     QSqlQuery* query = dbsystem.query();
     if(depOrarr){
         query->exec("select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and DepartureTime >= " + starttime + " and DepartureTime <= " + endtime + " and " + dayoftheweek + " = 1;");
+        qDebug() << "select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and DepartureTime >= " + starttime + " and DepartureTime <= " + endtime + " and " + dayoftheweek + " = 1;";
+        qDebug() << query->lastError();
     }
     else{
-        query->exec("select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and ArrivalTime >= " + starttime + " and ArrivalTime <= " + endtime + " and " + dayoftheweek + " = 1;");
+        query->exec("select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and ArrivalTime >= " + starttime + " and ArrivalTime <= " + endtime + " and '" + dayoftheweek + "' = 1;");
+        qDebug() << "select * from traintable where Departure = '" + depart + "' and Terminal = '" + arrive + "' and ArrivalTime >= " + starttime + " and ArrivalTime <= " + endtime + " and '" + dayoftheweek + "' = 1;";
+        qDebug() << query->lastError();
     }
 
     while(query->next()){
@@ -209,6 +254,15 @@ void TrainTicketSystemServer::searchTrain(bool depOrarr, const QString &depart, 
             request(query->value(i).toString());
         }
     }
-    request(QString::number(ServerOrder::DataTransferEnd));
+    request(ServerOrder::DataTransferEnd);
     send_request(socket);
 }
+
+
+//============================================================
+//========================= set pages ========================
+
+void TrainTicketSystemServer::switchPage(int idx){
+    ui->stackedWidget->setCurrentIndex(idx);
+}
+

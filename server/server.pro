@@ -14,7 +14,7 @@ SOURCES += \
     ../ticket.cpp \
     ../trainticketsystem.cpp \
     main.cpp \
-    trainticketsystemserver.cpp
+    trainticketsystemserver.cpp\
 
 HEADERS += \
     ../databasesystem.h \

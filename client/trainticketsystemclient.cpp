@@ -31,13 +31,16 @@ TrainTicketSystemClient::TrainTicketSystemClient(QWidget *parent)
     // set initial page
     switchPage(1);
     set_login_page();
+    ui->lineEdit_account->setText("TsaiMother");
+    ui->lineEdit_password->setText("111111");
 
-    // set station combobox
-    ui->comboBox_2->setCurrentIndex(1);
+
 
     // set inqury time
     ui->dateEdit->setDate(datetime->currentDateTime().date());
     ui->calendarWidget->setDateEditEnabled(0);
+    ui->comboBox_6->setCurrentIndex(1);
+    ui->comboBox_7->setCurrentIndex(8);
 
     // disp pages use
     connect(ui->actionstack0,SIGNAL(triggered()),this,SLOT(stack0()));
@@ -130,26 +133,26 @@ void TrainTicketSystemClient::on_pushButton_clicked()
             datestr = "sun";
             break;
     }
-    qDebug() << "Inqury: " << dep << arr << stnum << " " << ednum;
+    qDebug() << "Inqury: " << dep << arr << stnum << ednum;
 
-    while(!traindisp.empty()){
-        delete traindisp.front();
-        traindisp.pop_front();
+    // socket request
+    request(ClientOrder::TrainInquiry);
+    request(ui->radioButton->isChecked()?"1":"0");
+    request(datestr);
+    request(ednum);
+    request(stnum);
+    request(arr);
+    request(dep);
+    send_request(socket);
+
+    // clear table
+    for(int i=0; i<traindisp.size(); i++){
+        ui->tableWidget->removeCellWidget(i,0);
+        ui->tableWidget->removeRow(i);
     }
 
-
-    /*int i=0;
-    while(server->query->next()){
-        TrainGraphicsView *item = new TrainGraphicsView(new QGraphicsView);
-        traindisp.append(item);
-        ui->tableWidget->setRowCount(++i);
-        ui->tableWidget->setCellWidget(i-1, 0, item);
-        ui->tableWidget->setColumnWidth(i-1, 380);
-        ui->tableWidget->setRowHeight(i-1, 120);
-        ui->tableWidget->verticalScrollMode();
-    }*/
-
-
+    // clear train display table
+    traindisp.clear();
 }
 
 
@@ -278,6 +281,7 @@ void TrainTicketSystemClient::on_createAccountButton_clicked()
 
 void TrainTicketSystemClient::slot_readyRead(){
     QTcpSocket *socket = dynamic_cast<QTcpSocket*>(sender());
+
     QString req;
     USI order;
     while(socket->canReadLine()){
@@ -320,6 +324,35 @@ void TrainTicketSystemClient::slot_readyRead(){
                 ui->comboBox_2->addItem(req);
                 req = response(socket->readLine());
             }
+            // set station combobox
+            ui->comboBox_2->setCurrentIndex(1);
+        }
+        else if(order == ServerOrder::SendTrainInquiry){
+
+            QString data = response(socket->readLine());
+            int i=0;
+            while(data != QString::number(ServerOrder::DataTransferEnd)){
+                TrainGraphicsView *item = new TrainGraphicsView(nullptr);
+                traindisp.push_back(item);
+                int trainno = data.toInt();
+                QString dep = response(socket->readLine());
+                QString arr = response(socket->readLine());
+                int dept = response(socket->readLine()).toInt();
+                int arrt = response(socket->readLine()).toInt();
+
+                item->TrainInquryView(trainno,dep,arr,dept,arrt);
+
+                ui->tableWidget->setRowCount(++i);
+                ui->tableWidget->setCellWidget(i-1, 0, item);
+                ui->tableWidget->setColumnWidth(i-1, 380);
+                ui->tableWidget->setRowHeight(i-1, 120);
+                ui->tableWidget->verticalScrollMode();
+
+                connect(item, &TrainGraphicsView::BuyTicketClicked, this, &TrainTicketSystemClient::slot_booking);
+
+                data = response(socket->readLine());
+
+            }
         }
     }
 }
@@ -335,3 +368,31 @@ void TrainTicketSystemClient::set_station_table(){
     request(QString::number(ClientOrder::AskStationTable));
     send_request(socket);
 }
+
+void TrainTicketSystemClient::slot_booking(){
+    TrainGraphicsView *item = dynamic_cast<TrainGraphicsView*>(sender());
+
+    ui->label_13->setText(QString::number(item->trainNum));
+    ui->label_15->setText(item->dep);
+    ui->label_16->setText(item->termi);
+    ui->label_17->setText("200");
+    switchPage(2);
+}
+
+
+
+//============================================================
+//======================= Booking Page =======================
+
+//book
+void TrainTicketSystemClient::on_pushButton_2_clicked()
+{
+
+}
+
+//cancel
+void TrainTicketSystemClient::on_pushButton_3_clicked()
+{
+    switchPage(0);
+}
+

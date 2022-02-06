@@ -30,7 +30,7 @@ TrainTicketSystemServer::TrainTicketSystemServer(QWidget *parent)
 
     // connect DB page
     ui->stackedWidget->setCurrentIndex(1);
-    ui->lineEdit->setText("140.113.138.72");
+    ui->lineEdit->setText("");
     ui->lineEdit_2->setText("client");
     ui->lineEdit_3->setText("tsaimotheriloveyou");
     ui->lineEdit_4->setText("3306");
